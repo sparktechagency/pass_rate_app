@@ -9,6 +9,7 @@ import 'package:pass_rate/core/extensions/context_extensions.dart';
 import 'package:pass_rate/core/routes/app_routes.dart';
 import 'package:pass_rate/shared/widgets/app_button.dart';
 import 'package:pass_rate/shared/widgets/custom_appbar.dart';
+import '../../../core/utils/device/device_utility.dart';
 import '../controllers/assessment_controller.dart';
 
 class ConfirmSubmissionPage extends GetView<AssessmentController> {
@@ -24,11 +25,21 @@ class ConfirmSubmissionPage extends GetView<AssessmentController> {
         child: Row(
           spacing: 12,
           children: <Widget>[
-            Expanded(child: AppButton(labelText: AppStrings.submitAnother.tr, onTap: () {})),
+            Expanded(
+              child: AppButton(
+                labelText: AppStrings.submitAnother.tr,
+                onTap: () {
+                  /// simple Vibration
+                  DeviceUtility.hapticFeedback();
+                },
+              ),
+            ),
             Expanded(
               child: AppButton(
                 labelText: AppStrings.viewStatics.tr,
                 onTap: () {
+                  /// simple Vibration
+                  DeviceUtility.hapticFeedback();
                   Get.toNamed(AppRoutes.viewStatisticsScreen);
                 },
               ),

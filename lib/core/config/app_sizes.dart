@@ -2,7 +2,7 @@ class AppSizes {
   AppSizes._();
 
   // screen horizontal padding
-  static const double screenHorizontal = 20.0;
+  static const double screenHorizontal = 16.0;
 
   // Padding and Margin Sizes
   static const double xs = 4.0;

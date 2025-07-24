@@ -22,12 +22,15 @@ dependencies:
   intl: ^0.20.2
   #for loader :
   flutter_spinkit:
-#for internet connection:
+  #for internet connection:
   connectivity_plus:
-#for logging the error:
+  #for logging the error:
   logger:
   image_picker:
   file_picker:
+  #for icon :
+  flutter_launcher_icons: ^0.14.4
+
 
 dev_dependencies:
   flutter_test:

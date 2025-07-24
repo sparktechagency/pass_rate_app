@@ -13,6 +13,7 @@ import '../../../core/common/widgets/custom_svg.dart';
 import '../../../core/common/widgets/date_picker_field.dart';
 import '../../../core/design/app_colors.dart';
 import '../../../core/design/app_icons.dart';
+import '../../../core/utils/device/device_utility.dart';
 import '../controllers/assessment_controller.dart';
 
 class SubmitAssessmentScreen extends GetView<AssessmentController> {
@@ -64,7 +65,7 @@ class SubmitAssessmentScreen extends GetView<AssessmentController> {
 
               /// Select Year and Month ================ >
               CustomDropdown<String>(
-                label: AppStrings.whatWasInlcludedInYour.tr,
+                label: AppStrings.whatWasIncludedInYour.tr,
                 isRequired: true,
                 items: controller.assessmentItems,
                 hint: AppStrings.chooseTasks.tr,
@@ -119,6 +120,8 @@ class SubmitAssessmentScreen extends GetView<AssessmentController> {
               AppButton(
                 labelText: AppStrings.submit.tr,
                 onTap: () {
+                  /// simple Vibration
+                  DeviceUtility.hapticFeedback();
                   Get.toNamed(AppRoutes.confirmSubmissionPage);
                 },
                 bgColor: AppColors.primaryColor,

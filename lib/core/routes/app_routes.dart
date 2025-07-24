@@ -4,6 +4,11 @@ class AppRoutes {
   // Initial routes
   static const String initialRoute = "/";
 
+  //splash screen
+  static const String splashScreen = "/splash-screen";
+  static const String nextSplashScreen = "/next-splash-screen";
+
+
   //home routes
   static const String homeRoute = "/home-page";
   static const String supportPage = "/support-page";
@@ -16,5 +21,7 @@ class AppRoutes {
   //statistics page
   static const String statisticsScreen = "/statistics-page";
   static const String viewStatisticsScreen = "/view-statistics-page";
+
+
 
 }

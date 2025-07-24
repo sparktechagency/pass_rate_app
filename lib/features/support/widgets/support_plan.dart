@@ -8,22 +8,22 @@ import 'package:pass_rate/core/extensions/context_extensions.dart';
 class PlanOption {
   final String title;
   final String price;
+  final String description;
   final bool isSelected;
 
-  PlanOption({required this.title, required this.price, this.isSelected = false});
+  PlanOption({
+    required this.title,
+    required this.price,
+    this.isSelected = false,
+    required this.description,
+  });
 }
 
 class SupportPlanSelector extends StatefulWidget {
   final List<PlanOption> plans;
   final Function(int)? onPlanSelected;
 
-
-  const SupportPlanSelector({
-    super.key,
-    required this.plans,
-    this.onPlanSelected,
-
-  });
+  const SupportPlanSelector({super.key, required this.plans, this.onPlanSelected});
 
   @override
   State<SupportPlanSelector> createState() => _SupportPlanSelectorState();
@@ -35,7 +35,7 @@ class _SupportPlanSelectorState extends State<SupportPlanSelector> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.symmetric(vertical: AppSizes.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -46,18 +46,25 @@ class _SupportPlanSelectorState extends State<SupportPlanSelector> {
           ),
           const SizedBox(height: AppSizes.md),
 
-          Row(
+          Wrap(
+            runSpacing: 8.0,
+            spacing: 12.0,
             children: <Widget>[
               for (int i = 0; i < widget.plans.length; i++)
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(right: i == widget.plans.length - 1 ? 0 : 8),
-                    child: _buildPlanCard(i),
-                  ),
-                ),
+                _buildPlanCard(i),
             ],
           ),
 
+          // GridView.builder(
+          //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          //         crossAxisCount: 2
+          //     ),
+          //     itemCount: widget.plans.length,
+          //     itemBuilder: (_, int index){
+          //       return _buildPlanCard(index);
+          //     }
+          //
+          // )
 
         ],
       ),
@@ -76,8 +83,17 @@ class _SupportPlanSelectorState extends State<SupportPlanSelector> {
         widget.onPlanSelected?.call(index);
       },
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: AppSizes.xl, vertical: AppSizes.xl),
-        decoration: BoxDecoration(
+        width: context.screenWidth * .4,
+        constraints: const BoxConstraints(
+          minHeight: 160,
+        ),
+        padding: const EdgeInsets.only(
+            top: 5,
+            left: 5,
+            right: 5,
+        ),
+        margin: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+         decoration: BoxDecoration(
           border: Border.all(
             color: isSelected ? AppColors.primaryColor : Colors.grey,
             width: isSelected ? 2 : 1,
@@ -85,37 +101,51 @@ class _SupportPlanSelectorState extends State<SupportPlanSelector> {
           borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
           color: isSelected ? AppColors.primaryColor.withValues(alpha: 0.05) : Colors.transparent,
         ),
-        child: Row(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Container(
-              width: 20,
-              height: 20,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: isSelected ? AppColors.primaryColor : Colors.grey,
-                  width: 2,
-                ),
-              ),
-              child:
-                  isSelected
-                      ? Center(
-                        child: Container(
-                          width: 10,
-                          height: 10,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.primaryColor,
-                          ),
-                        ),
-                      )
-                      : null,
-            ),
-            const SizedBox(width: 12),
-            Text(
-              plan.price,
-              style: context.txtTheme.headlineMedium?.copyWith(
-                color: isSelected ? AppColors.primaryColor : Colors.grey,
+            Text(plan.title, style: context.txtTheme.labelLarge, maxLines: 1,),
+            const SizedBox(height: AppSizes.sm,),
+            Text(plan.description, maxLines: 3,),
+            const SizedBox(height: AppSizes.md),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Container(
+                    width: 20,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: isSelected ? AppColors.primaryColor : Colors.grey,
+                        width: 2,
+                      ),
+                    ),
+                    child:
+                        isSelected
+                            ? Center(
+                              child: Container(
+                                width: 10,
+                                height: 10,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.primaryColor,
+                                ),
+                              ),
+                            )
+                            : null,
+                  ),
+                  const SizedBox(width: 3),
+                  Text(
+                    plan.price,
+                    style: context.txtTheme.headlineMedium?.copyWith(
+                      color: isSelected ? AppColors.primaryColor : Colors.grey,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -124,3 +154,4 @@ class _SupportPlanSelectorState extends State<SupportPlanSelector> {
     );
   }
 }
+

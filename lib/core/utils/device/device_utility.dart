@@ -35,7 +35,7 @@ class DeviceUtility {
 
 
 
-  static void hapticFeedback(Duration duration) async{
+  static void hapticFeedback() async{
     HapticFeedback.heavyImpact();
   }
 
