@@ -289,8 +289,8 @@ class AssessmentController extends GetxController {
         final String deviceID = await DeviceIdService.getDeviceId() ?? '';
 
         final Map<String, dynamic> submissionData = <String, dynamic>{
-          // "deviceId": deviceID,
-          "deviceId": AppConstants.demoDeviceId,
+          "deviceId": deviceID,
+          // "deviceId": AppConstants.demoDeviceId,
           "airlineId": selectedAirlineId.value,
           "date": isoFormatString,
           "assessments": assessmentList,

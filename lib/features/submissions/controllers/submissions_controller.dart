@@ -91,8 +91,8 @@ class SubmissionsController extends GetxController {
     try {
       loader.value = true;
       final NetworkResponse response = await NetworkCaller().getRequest(
-        // AppUrl.getMySubmission(deviceId: GetStorageModel().getString(AppConstants.deviceId)),
-        AppUrl.getMySubmission(deviceId: AppConstants.demoDeviceId),
+        AppUrl.getMySubmission(deviceId: GetStorageModel().getString(AppConstants.deviceId)),
+        // AppUrl.getMySubmission(deviceId: AppConstants.demoDeviceId),
       );
 
       // Check if the response is successful
