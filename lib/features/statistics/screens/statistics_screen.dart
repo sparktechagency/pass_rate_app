@@ -36,6 +36,7 @@ class StatisticsScreen extends GetView<StatisticsController> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: const SupportFloatingWidget(),
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: AppSizes.md),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

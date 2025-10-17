@@ -99,6 +99,7 @@ class SubmissionsScreen extends GetView<SubmissionsController> {
                     }
 
                     return ListView.separated(
+                      physics: const BouncingScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: filteredSubmissions.length,
                       itemBuilder: (BuildContext context, int index) {
