@@ -1,13 +1,13 @@
 class SubmissionResponse {
   final String airlineName;
   final DateTime selectedYear;
-  final double totalRate;
+  final double totalResponse;
   final double totalSuccessRate;
 
   SubmissionResponse({
     required this.airlineName,
     required this.selectedYear,
-    required this.totalRate,
+    required this.totalResponse,
     required this.totalSuccessRate,
   });
 
@@ -16,13 +16,13 @@ class SubmissionResponse {
     final Map<String, dynamic>? submission = json['submission'] as Map<String, dynamic>?;
 
     return SubmissionResponse(
-      airlineName: submission?['selectedAirline'] as String? ?? '',
+      airlineName: submission?['name'] as String? ?? '',
       selectedYear:
-          submission?['selectedYear'] != null
-              ? DateTime.parse(submission!['selectedYear'] as String)
+          submission?['date'] != null
+              ? DateTime.parse(submission!['date'] as String)
               : DateTime.now(),
-      totalRate: (json['totalRate'] as num?)?.toDouble() ?? 0.0,
-      totalSuccessRate: (json['totalSuccessRate'] as num?)?.toDouble() ?? 0.0,
+      totalResponse: (json['totalResponse'] as num?)?.toDouble() ?? 0.0,
+      totalSuccessRate: (json['successRate'] as num?)?.toDouble() ?? 0.0,
     );
   }
 
@@ -31,13 +31,13 @@ class SubmissionResponse {
     return <String, dynamic>{
       'airlineName': airlineName,
       'selectedYear': selectedYear.toIso8601String(),
-      'totalRate': totalRate,
+      'totalRate': totalResponse,
       'totalSuccessRate': totalSuccessRate,
     };
   }
 
   @override
   String toString() {
-    return 'SubmissionResponse(airlineName: $airlineName, selectedYear: $selectedYear, totalRate: $totalRate, totalSuccessRate: $totalSuccessRate)';
+    return 'SubmissionResponse(airlineName: $airlineName, selectedYear: $selectedYear, totalRate: $totalResponse, totalSuccessRate: $totalSuccessRate)';
   }
 }

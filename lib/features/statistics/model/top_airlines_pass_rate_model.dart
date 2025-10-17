@@ -1,24 +1,25 @@
 class TopAirlineByPassRateModel {
-  final double passRate;
-  final String airline;
+  final String airlineName;
+  final double successRate;
 
-  TopAirlineByPassRateModel({required this.passRate, required this.airline});
+  TopAirlineByPassRateModel({required this.airlineName, required this.successRate});
 
   // Factory constructor to create an instance from JSON
   factory TopAirlineByPassRateModel.fromJson(Map<String, dynamic> json) {
     return TopAirlineByPassRateModel(
-      passRate: (json['passRate'] as num).toDouble(),
-      airline: json['airline'] as String,
+      airlineName: json['name'] as String? ?? 'Unknown',
+      // Handle null with default value
+      successRate: double.parse(json['successRate'].toString()), // Handle null with default value
     );
   }
 
   // Convert instance to JSON if needed
   Map<String, dynamic> toJson() {
-    return <String, dynamic>{'passRate': passRate, 'airline': airline};
+    return <String, dynamic>{'airlineName': airlineName, 'totalSubmissions': successRate};
   }
 
   @override
   String toString() {
-    return 'AirlinePassRate(airline: $airline, passRate: $passRate)';
+    return 'TopAirlineByPassRateModel(airlineName: $airlineName, totalSubmissions: $successRate)';
   }
 }

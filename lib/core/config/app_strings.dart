@@ -75,7 +75,7 @@ class AppStrings {
   static const String unexpectedError = 'An unexpected error occurred. Please try again later.';
   static const String networkError = 'Network request failed. Please try again later.';
   static const String deleteTitle = "Do you want to delete this submission ?";
-  static const String totalResponses = 'Total Responses:';
+  static const String totalResponses = 'Total Responses';
   static const String successRate = 'Success Rate';
   static const String deletionFailed = 'Failed to delete the item !!';
   static const String itemDeleted = 'Item Deleted ';
@@ -86,6 +86,7 @@ class AppStrings {
   static const String checkPassRatesAssessmentContent = 'Check Pass Rates & Assessment Content';
   static const String topAirlinesByPassRate = ' Top Airlines by Pass Rate';
   static const String topAirlineSubmission = 'Top Airlines by Submission Count';
+  static const String noDataForTheSelectedYear = 'No Data for the selected year';
   static const String year = 'Year';
   static const String search = 'Search';
   static const String mySubmission = 'My Submissions';

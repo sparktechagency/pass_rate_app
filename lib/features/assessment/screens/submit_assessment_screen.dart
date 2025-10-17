@@ -9,6 +9,8 @@ import 'package:pass_rate/core/extensions/widget_extensions.dart';
 import 'package:pass_rate/core/utils/custom_loader.dart';
 import 'package:pass_rate/core/utils/enum.dart';
 import 'package:pass_rate/core/utils/logger_utils.dart';
+import 'package:pass_rate/features/assessment/model/airline_model.dart';
+import 'package:pass_rate/features/assessment/model/assessment_model.dart';
 import 'package:pass_rate/shared/widgets/app_button.dart';
 import '../../../core/common/widgets/custom_dropdown.dart';
 import '../../../core/common/widgets/custom_svg.dart';
@@ -37,19 +39,19 @@ class SubmitAssessmentScreen extends GetView<AssessmentController> {
 
             /// ============> Airline Name ==========>
             const SizedBox(height: AppSizes.xl),
-            CustomDropdown<String>(
+            CustomDropdown<Airline>(
               label: AppStrings.airlineName.tr,
               isRequired: true,
-              items: controller.airlineNames,
+              items: controller.airlinesDetails,
               hint: AppStrings.chooseAirlineName.tr,
               dropdownMaxHeight: 250,
-              onChanged: (String? value) async {
+              onChanged: (Airline? value) async {
                 controller.updateSelectedAirline(value);
                 // call the function to get the assessments ===>
                 await controller.getAssessmentList();
               },
-              validator: (String? value) {
-                if (value == null) {
+              validator: (Airline? value) {
+                if (value?.name == null) {
                   return 'Please select a type';
                 }
                 return null;
@@ -81,10 +83,10 @@ class SubmitAssessmentScreen extends GetView<AssessmentController> {
                 child: Visibility(
                   visible: controller.loader.value == false,
                   replacement: const LottieLoaderWidget().centered,
-                  child: MultiSelectDropdown<String>(
-                    items: controller.assessmentItems,
+                  child: MultiSelectDropdown<Assessment>(
+                    items: controller.assessmentItemsDetails,
                     label: AppStrings.whatWasIncludedInYourAssessment.tr,
-                    onChanged: (List<String> selected) {
+                    onChanged: (List<Assessment> selected) {
                       controller.updateAssessmentList(selected);
                       LoggerUtils.debug('Selected: $selected');
                     },
@@ -157,7 +159,7 @@ class SubmitAssessmentScreen extends GetView<AssessmentController> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Obx(
-        () =>   SizedBox(
+        () => SizedBox(
           width: context.screenWidth * 0.9,
           child:
               controller.isLottieVisible.value

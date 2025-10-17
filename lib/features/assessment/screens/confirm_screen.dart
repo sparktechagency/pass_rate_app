@@ -93,7 +93,7 @@ class ConfirmSubmissionPage extends GetView<AssessmentController> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(AppStrings.totalResponses.tr),
-                        Text(submittedResponse.totalRate.toInt().toString()),
+                        Text(submittedResponse.totalResponse.toInt().toString()),
                       ],
                     ),
                     const SizedBox(height: AppSizes.sm),

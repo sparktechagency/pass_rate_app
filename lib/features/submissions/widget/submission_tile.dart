@@ -23,7 +23,7 @@ class SubmissionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Format the date as "yyyy - Month .."
-    final String formattedDate = DateFormat('yyyy - MMMM').format(submittedAssessment.date);
+    final String formattedDate = DateFormat('yyyy - MMMM').format(submittedAssessment.createdAt);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: AppSizes.md, vertical: AppSizes.md),
       decoration: BoxDecoration(
@@ -127,8 +127,8 @@ class SubmissionTile extends StatelessWidget {
                   children:
                       submittedAssessment.assessments
                           .map(
-                            (SubmittedAssessment assessment) => Text(
-                              "- ${assessment.assessment.toCapitalize}",
+                            (String assessment) => Text(
+                              "- ${assessment.toCapitalize}",
                               style: context.txtTheme.bodySmall,
                             ),
                           )

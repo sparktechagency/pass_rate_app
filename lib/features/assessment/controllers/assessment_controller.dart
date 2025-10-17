@@ -35,7 +35,8 @@ class AssessmentController extends GetxController {
   RxBool loader = false.obs;
   RxBool submitLoader = false.obs;
   RxString selectedAirlineName = ''.obs;
-  RxList<String> assessmentList = <String>[].obs;
+  RxString selectedAirlineId = ''.obs;
+  RxList<Assessment> assessmentListDetails = <Assessment>[].obs;
   Rx<ResultStatus> resultStatus = Rx<ResultStatus>(ResultStatus.none);
 
   // Make this a proper RxBool property, not a getter
@@ -61,6 +62,7 @@ class AssessmentController extends GetxController {
 
   ///================================> For the Airline Name section ==========================>
   final RxList<DropdownItem<String>> airlineNames = <DropdownItem<String>>[].obs;
+  final RxList<DropdownItem<Airline>> airlinesDetails = <DropdownItem<Airline>>[].obs;
 
   Future<void> getAirlineNames() async {
     try {
@@ -77,6 +79,9 @@ class AssessmentController extends GetxController {
           for (final Airline airline in airlines) {
             airlineNames.add(
               DropdownItem<String>(value: airline.name, label: airline.name.toCapitalize),
+            );
+            airlinesDetails.add(
+              DropdownItem<Airline>(value: airline, label: airline.name.toCapitalize),
             );
           }
         } else {
@@ -106,15 +111,16 @@ class AssessmentController extends GetxController {
   }
 
   // Update methods that trigger completion check
-  void updateSelectedAirline(String? airlineName) {
-    if (airlineName != null) {
-      selectedAirlineName.value = airlineName;
+  void updateSelectedAirline(Airline? airline) {
+    if (airline?.name != null) {
+      selectedAirlineName.value = airline!.name;
+      selectedAirlineId.value = airline.id;
       checkAndUpdateCompletion();
     }
   }
 
-  void updateAssessmentList(List<String> selectedItems) {
-    assessmentList.value = selectedItems;
+  void updateAssessmentList(List<Assessment> selectedItems) {
+    assessmentListDetails.value = selectedItems;
     checkAndUpdateCompletion();
   }
 
@@ -173,6 +179,8 @@ class AssessmentController extends GetxController {
   ///================================> For the Assessment section ==========================>
 
   final RxList<MultiSelectItem<String>> assessmentItems = <MultiSelectItem<String>>[].obs;
+  final RxList<MultiSelectItem<Assessment>> assessmentItemsDetails =
+      <MultiSelectItem<Assessment>>[].obs;
 
   Future<void> getAssessmentList() async {
     try {
@@ -186,11 +194,15 @@ class AssessmentController extends GetxController {
 
         if (data.isNotEmpty) {
           assessmentItems.clear();
+          assessmentItemsDetails.clear();
           final List<Assessment> assessments =
               data.map((dynamic json) => Assessment.fromJson(json)).toList();
           for (final Assessment assessment in assessments) {
             assessmentItems.add(
               MultiSelectItem<String>(value: assessment.name, label: assessment.name.toCapitalize),
+            );
+            assessmentItemsDetails.add(
+              MultiSelectItem<Assessment>(value: assessment, label: assessment.name.toCapitalize),
             );
           }
         } else {
@@ -211,7 +223,7 @@ class AssessmentController extends GetxController {
   bool get allAssessmentsCompleted {
     return (selectedAirlineName.value.isNotEmpty &&
         assessmentDate.value.isNotEmpty && // Use the reactive string instead
-        assessmentList.isNotEmpty &&
+        assessmentListDetails.isNotEmpty &&
         resultStatus.value != ResultStatus.none);
   }
 
@@ -227,7 +239,7 @@ class AssessmentController extends GetxController {
       // Use the reactive string
       completedSteps++;
     }
-    if (assessmentList.isNotEmpty) {
+    if (assessmentListDetails.isNotEmpty) {
       completedSteps++;
     }
     if (resultStatus.value != ResultStatus.none) {
@@ -250,7 +262,7 @@ class AssessmentController extends GetxController {
       // Use the reactive string
       completed++;
     }
-    if (assessmentList.isNotEmpty) {
+    if (assessmentListDetails.isNotEmpty) {
       completed++;
     }
     if (resultStatus.value != ResultStatus.none) {
@@ -267,47 +279,47 @@ class AssessmentController extends GetxController {
         DeviceUtility.hapticFeedback();
 
         /// for the list of assessment Strings
-        final List<Map<String, String>> assessmentMapList = <Map<String, String>>[];
+        final List<String> assessmentList = <String>[];
 
-        for (final String assessment in assessmentList) {
-          assessmentMapList.add(<String, String>{'name': assessment});
+        for (final Assessment assessment in assessmentListDetails) {
+          assessmentList.add(assessment.id);
         }
 
-        LoggerUtils.debug(assessmentMapList); // here is the list of the selected assessment .
+        LoggerUtils.debug(assessmentList); // here is the list of the selected assessment .
         final String deviceID = await DeviceIdService.getDeviceId() ?? '';
 
         final Map<String, dynamic> submissionData = <String, dynamic>{
           // "deviceId": deviceID,
           "deviceId": AppConstants.demoDeviceId,
-          "airline": selectedAirlineName.value,
+          "airlineId": selectedAirlineId.value,
           "date": isoFormatString,
-          "assessments": assessmentMapList,
+          "assessments": assessmentList,
           "status": resultStatus.value.displayName,
         };
 
-        LoggerUtils.debug("Submission Data: ${jsonEncode(submissionData)}");
+        LoggerUtils.debug("Submission Data: \n${jsonEncode(submissionData)}");
 
         final NetworkResponse response = await NetworkCaller().postRequest(
           AppUrl.postSubmission,
           body: submissionData,
         );
 
-        if (response.statusCode == 200) {
+        if (response.isSuccess) {
           isLottieVisible.value = true;
 
           ToastManager.show(
             message: AppStrings.responsesSubmitted.tr,
             icon: const Icon(CupertinoIcons.check_mark_circled, color: AppColors.white),
           );
-
+          LoggerUtils.debug('Submission response : ${response.jsonResponse?['data']}');
           final SubmissionResponse submissionResponse = SubmissionResponse.fromJson(
-            response.jsonResponse ?? <String, dynamic>{},
+            response.jsonResponse?['data'] ?? <String, dynamic>{},
           );
           await Get.toNamed(AppRoutes.supportPage);
           Get.offNamed(AppRoutes.confirmSubmissionPage, arguments: submissionResponse);
         } else {
           ToastManager.show(
-            message: response.jsonResponse?['error'] ?? AppStrings.unexpectedError.tr,
+            message: response.jsonResponse?['message'] ?? AppStrings.unexpectedError.tr,
             icon: const Icon(CupertinoIcons.info_circle_fill, color: AppColors.white),
             backgroundColor: AppColors.darkRed,
             textColor: AppColors.white,
@@ -338,9 +350,8 @@ class AssessmentController extends GetxController {
   Future<void> resetAssessments() async {
     airlineNames.clear();
     selectedAirlineName.value = '';
-    assessmentList.clear();
+    assessmentListDetails.clear();
     resultStatus.value = ResultStatus.none;
-    assessmentDateTEController.clear();
     assessmentDate.value = ''; // Reset the reactive string too
     isLottieVisible.value = false;
     loader.value = false;
@@ -348,13 +359,12 @@ class AssessmentController extends GetxController {
     allAssessmentsCompletedRx.value = false;
     completionPercentageRx.value = 0.0;
     completedStepsRx.value = 0;
-    await getAirlineNames();
+    // await getAirlineNames();
   }
 
   @override
   void onClose() {
     assessmentDateTEController.removeListener(_onDateTextChanged);
-    assessmentDateTEController.dispose();
     super.onClose();
   }
 }

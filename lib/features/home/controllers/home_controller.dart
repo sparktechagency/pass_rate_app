@@ -39,6 +39,7 @@ class HomeController extends GetxController {
       }
     } catch (e) {
       LoggerUtils.debug("Error in getting Privacy Policy: $e");
+      termsCondition.value = AppStrings.privacyPolicyTerms;
     } finally {
       loader.value = false;
     }

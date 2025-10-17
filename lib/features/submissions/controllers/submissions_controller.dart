@@ -41,7 +41,7 @@ class SubmissionsController extends GetxController {
 
       // Search in assessments
       final bool assessmentMatch = submission.assessments.any(
-        (SubmittedAssessment assessment) => (assessment.airline).toLowerCase().contains(query),
+        (String assessment) => (assessment).toLowerCase().contains(query),
       );
 
       // Search in submission date
@@ -117,7 +117,7 @@ class SubmissionsController extends GetxController {
         }
       } else {
         // Handle the case where the network request fails
-        _showErrorMessage(AppStrings.networkError.tr);
+        _showErrorMessage(response.jsonResponse?['message']);
       }
     } catch (e) {
       // Handle unexpected errors during the request or parsing

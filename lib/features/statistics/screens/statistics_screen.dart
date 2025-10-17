@@ -131,7 +131,7 @@ class StatisticsScreen extends GetView<StatisticsController> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    controller.airlineStatistics.value?.name ??
+                                    controller.airlineStatistics.value?.airlineName ??
                                         controller.statSearchAirlineName.value,
                                     // The airline name
                                     style: context.txtTheme.titleMedium,
@@ -148,7 +148,7 @@ class StatisticsScreen extends GetView<StatisticsController> {
                                     children: <Widget>[
                                       Text(AppStrings.totalResponses.tr),
                                       Text(
-                                        (controller.airlineStatistics.value?.totalResponse ?? 0)
+                                        (controller.airlineStatistics.value?.totalSubmissions ?? 0)
                                             .toString(),
                                       ),
                                     ],
@@ -159,9 +159,9 @@ class StatisticsScreen extends GetView<StatisticsController> {
                                     children: <Widget>[
                                       Text(AppStrings.successRate.tr),
                                       Text(
-                                        controller.airlineStatistics.value?.totalSuccessRate == -1
+                                        controller.airlineStatistics.value?.successRate == -1
                                             ? 'N/A'
-                                            : '${controller.airlineStatistics.value!.totalSuccessRate.toStringAsFixed(2)}%',
+                                            : '${controller.airlineStatistics.value!.successRate.toStringAsFixed(2)}%',
                                         style: context.txtTheme.labelMedium,
                                       ),
                                     ],
@@ -178,13 +178,13 @@ class StatisticsScreen extends GetView<StatisticsController> {
                                     shrinkWrap: true,
                                     itemBuilder: (BuildContext context, int index) {
                                       return Text(
-                                        (controller.airlineStatistics.value?.content[index] ??
+                                        (controller.airlineStatistics.value?.assessments[index] ??
                                                 AppStrings.assessmentContent)
                                             .toCapitalize,
                                       );
                                     },
                                     itemCount:
-                                        controller.airlineStatistics.value?.content.length ?? 0,
+                                        controller.airlineStatistics.value?.assessments.length ?? 0,
                                   ),
 
                                   const SizedBox(height: AppSizes.md),
@@ -313,31 +313,35 @@ class StatisticsScreen extends GetView<StatisticsController> {
               CustomSvgImage(assetName: AppIcons.dividerIcon, width: 20, height: 10),
             ],
           ),
-          ListView.separated(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: list.length,
-            itemBuilder: (BuildContext context, int index) {
-              final dynamic item = list[index];
-              return Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    if (item is TopAirlineByPassRateModel) ...<Widget>[
-                      Text(item.airline),
-                      Text(item.passRate.toStringAsFixed(2).toString()),
-                    ] else if (item is TopAirlineBySubmissionModel) ...<Widget>[
-                      Text(item.name),
-                      Text(item.count.toInt().toString()),
+          Visibility(
+            visible: list.isNotEmpty,
+            replacement: Text(AppStrings.noDataForTheSelectedYear.tr),
+            child: ListView.separated(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: list.length,
+              itemBuilder: (BuildContext context, int index) {
+                final dynamic item = list[index];
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      if (item is TopAirlineByPassRateModel) ...<Widget>[
+                        Text(item.airlineName),
+                        Text("${item.successRate.toStringAsFixed(1).toString()}%"),
+                      ] else if (item is TopAirlineBySubmissionModel) ...<Widget>[
+                        Text(item.name),
+                        Text(item.submissionCount.toInt().toString()),
+                      ],
                     ],
-                  ],
-                ),
-              );
-            },
-            separatorBuilder: (BuildContext context, int index) {
-              return const Divider();
-            },
+                  ),
+                );
+              },
+              separatorBuilder: (BuildContext context, int index) {
+                return const Divider();
+              },
+            ),
           ),
         ],
       ),

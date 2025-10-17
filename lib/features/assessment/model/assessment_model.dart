@@ -10,7 +10,7 @@ class Assessment {
   // Factory constructor to create object from JSON
   factory Assessment.fromJson(Map<String, dynamic> json) {
     return Assessment(
-      id: json['_id'] as String,
+      id: json['id'] as String,
       name: json['name'] as String,
     );
   }
@@ -18,7 +18,7 @@ class Assessment {
   // Convert object back to JSON
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
-      '_id': id,
+      'id': id,
       'name': name,
     };
   }

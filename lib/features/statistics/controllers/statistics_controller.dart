@@ -105,7 +105,7 @@ class StatisticsController extends GetxController {
         AppUrl.topAirlinesByPassRate(year: filterYearOfPassRate.value),
       );
       final List<dynamic> jsonData = response.jsonResponse?['data'] ?? <dynamic>[];
-      // LoggerUtils.debug(jsonData);
+      LoggerUtils.debug(jsonData);
 
       // Convert the list of maps to a list of AirlinePassRate objects
       topAirlinesByPassRate.value =
@@ -137,7 +137,7 @@ class StatisticsController extends GetxController {
         AppUrl.topAirlinesBySubmission(year: filterYearOfSubmission.value),
       );
       final List<dynamic> jsonData = response.jsonResponse?['data'] ?? <dynamic>[];
-      LoggerUtils.debug(jsonData);
+      // LoggerUtils.debug(jsonData);
 
       // Convert the list of maps to a list of AirlinePassRate objects
       topAirlinesBySubmission.value =
