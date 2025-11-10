@@ -1,7 +1,8 @@
 class AppUrl {
   AppUrl._();
 
-  static const String baseUrl = 'https://qemu-api.billal.space';
+  // static const String baseUrl = 'https://qemu-api.billal.space';
+  static const String baseUrl = 'https://api.passrate.app';
   static const String getAirlines = '$baseUrl/airlines';
 
   static String airlineAssessment = '$baseUrl/assessments/';

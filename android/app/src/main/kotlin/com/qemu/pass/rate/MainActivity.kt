@@ -1,4 +1,4 @@
-package com.qemu.pass_rate
+package com.qemu.pass.rate
 
 import io.flutter.embedding.android.FlutterActivity
 
