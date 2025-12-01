@@ -28,4 +28,6 @@ extension ContextExtensions on BuildContext {
   double get getKeyboardHeight =>  MediaQuery.of(this).viewInsets.bottom;
   // Check if Keyboard is Visible
   bool get isKeyboardVisible => MediaQuery.of(this).viewInsets.bottom > 0;
+
+
 }
