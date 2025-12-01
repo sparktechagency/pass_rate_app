@@ -36,7 +36,7 @@ class CustomLoading extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SpinKitCircle(
-      color: color ?? AppColors.white,
+      color: color ?? AppColors.primaryColor,
       size: size ?? 60.0,
     ).centered;
   }

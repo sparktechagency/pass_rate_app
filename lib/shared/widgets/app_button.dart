@@ -7,6 +7,7 @@ import '../../core/design/app_colors.dart';
 class AppButton extends StatelessWidget {
   final String labelText;
   final VoidCallback onTap;
+  final double? width;
 
   final Color bgColor;
   final Color textColor;
@@ -17,6 +18,7 @@ class AppButton extends StatelessWidget {
     required this.onTap,
     this.bgColor = AppColors.bgColor,
     this.textColor = AppColors.primaryColor,
+    this.width,
   });
 
   @override
@@ -29,9 +31,9 @@ class AppButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
         splashColor: textColor.withValues(alpha: 0.2),
         highlightColor: textColor.withValues(alpha: 0.2),
-         onTap: onTap,
+        onTap: onTap,
         child: Container(
-          width: context.screenWidth,
+          width: width ?? context.screenWidth,
           padding: const EdgeInsets.symmetric(vertical: AppSizes.md, horizontal: AppSizes.md),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),

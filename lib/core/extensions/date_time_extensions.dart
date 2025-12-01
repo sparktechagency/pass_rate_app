@@ -22,18 +22,5 @@ extension DateTimeExtensions on DateTime {
 
   bool get isValid => !isExpired;
 
-  String get timeAgo {
-    final Duration difference = DateTime.now().difference(this);
 
-    if (difference.inSeconds < 60) {
-      return '${difference.inSeconds} ${AppStrings.secondsAgo}';
-    }
-    if (difference.inMinutes < 60) {
-      return '${difference.inMinutes} ${AppStrings.minutesAgo}';
-    }
-    if (difference.inHours < 24) {
-      return '${difference.inHours} ${AppStrings.hoursAgo}';
-    }
-    return '${difference.inDays} ${AppStrings.daysAgo}';
-  }
 }

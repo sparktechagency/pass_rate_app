@@ -30,6 +30,11 @@ dependencies:
   file_picker:
   #for icon :
   flutter_launcher_icons: ^0.14.4
+  #for the device ID :
+  device_info_plus: ^10.1.0
+  get_storage: ^2.1.1
+  lottie: ^3.3.1
+  webview_flutter: ^4.11.0
 
 
 dev_dependencies:
@@ -37,6 +42,7 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^5.0.0
+  change_app_package_name: ^1.5.0
 
 flutter:
 
@@ -47,6 +53,7 @@ flutter:
     - assets/fonts/
     - assets/images/
     - assets/icons/
+    - assets/animation/
 
 
 

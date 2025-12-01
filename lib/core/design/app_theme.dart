@@ -59,7 +59,7 @@ class AppTheme {
       ),
       labelSmall: TextStyle(
         color: AppColors.headlineText,
-        fontSize: 12,
+        fontSize: 14,
         fontWeight: FontWeight.w400,
       ),
 

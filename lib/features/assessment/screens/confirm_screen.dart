@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pass_rate/core/common/widgets/custom_svg.dart';
-import 'package:pass_rate/core/config/app_constants.dart';
 import 'package:pass_rate/core/config/app_sizes.dart';
 import 'package:pass_rate/core/design/app_colors.dart';
 import 'package:pass_rate/core/design/app_icons.dart';
@@ -9,14 +8,18 @@ import 'package:pass_rate/core/extensions/context_extensions.dart';
 import 'package:pass_rate/core/routes/app_routes.dart';
 import 'package:pass_rate/shared/widgets/app_button.dart';
 import 'package:pass_rate/shared/widgets/custom_appbar.dart';
+import '../../../core/config/app_strings.dart';
 import '../../../core/utils/device/device_utility.dart';
 import '../controllers/assessment_controller.dart';
+import '../model/submission_response.dart';
 
 class ConfirmSubmissionPage extends GetView<AssessmentController> {
   const ConfirmSubmissionPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final SubmissionResponse submittedResponse = Get.arguments;
+
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: Container(
@@ -28,9 +31,11 @@ class ConfirmSubmissionPage extends GetView<AssessmentController> {
             Expanded(
               child: AppButton(
                 labelText: AppStrings.submitAnother.tr,
-                onTap: () {
+                onTap: () async {
                   /// simple Vibration
                   DeviceUtility.hapticFeedback();
+                  await controller.resetAssessments();
+                  Get.offNamed(AppRoutes.submitAssessment);
                 },
               ),
             ),
@@ -40,7 +45,7 @@ class ConfirmSubmissionPage extends GetView<AssessmentController> {
                 onTap: () {
                   /// simple Vibration
                   DeviceUtility.hapticFeedback();
-                  Get.toNamed(AppRoutes.viewStatisticsScreen);
+                  Get.toNamed(AppRoutes.statisticsScreen);
                 },
               ),
             ),
@@ -78,22 +83,32 @@ class ConfirmSubmissionPage extends GetView<AssessmentController> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('Rynair', style: context.txtTheme.titleMedium),
-                    Text('2024', style: context.txtTheme.labelMedium),
+                    Text(submittedResponse.airlineName, style: context.txtTheme.titleMedium),
+                    Text(
+                      submittedResponse.selectedYear.year.toString(),
+                      style: context.txtTheme.labelMedium,
+                    ),
                     const SizedBox(height: AppSizes.lg),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[Text('Total Responses:'), Text('124')],
+                      children: <Widget>[
+                        Text(AppStrings.totalResponses.tr),
+                        Text(submittedResponse.totalResponse.toInt().toString()),
+                      ],
                     ),
                     const SizedBox(height: AppSizes.sm),
-                    const Row(
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[Text('Success Rate'), Text('80%')],
+                      children: <Widget>[
+                        Text(AppStrings.successRate.tr),
+                        Text(submittedResponse.totalSuccessRate.toStringAsFixed(2)),
+                      ],
                     ),
                     const SizedBox(height: AppSizes.md),
                   ],
                 ),
               ),
+              const SizedBox(height: AppSizes.xxxL * 1.5),
             ],
           ),
         ),

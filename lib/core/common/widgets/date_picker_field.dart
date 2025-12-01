@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pass_rate/core/common/widgets/custom_svg.dart';
+import 'package:pass_rate/core/config/app_strings.dart';
 import 'package:pass_rate/core/design/app_icons.dart';
 import 'package:pass_rate/core/extensions/context_extensions.dart';
 import '../../config/app_sizes.dart';
@@ -16,6 +18,7 @@ class ReusableDatePickerField extends StatefulWidget {
   final DateTime? lastDate;
   final Color? color;
   final Widget? prefixIcon;
+  final Function(DateTime)? onDateSelected; // Callback for selected date
 
   const ReusableDatePickerField({
     super.key,
@@ -28,6 +31,7 @@ class ReusableDatePickerField extends StatefulWidget {
     this.color = Colors.white,
     this.prefixIcon,
     required this.labelText,
+    this.onDateSelected,
   });
 
   @override
@@ -36,44 +40,167 @@ class ReusableDatePickerField extends StatefulWidget {
 
 class _ReusableDatePickerFieldState extends State<ReusableDatePickerField> {
   late TextEditingController _controller;
+  DateTime? _selectedDate;
+
 
   @override
   void initState() {
     super.initState();
-    // Use provided controller or create a new one.
     _controller = widget.controller ?? TextEditingController();
   }
 
   @override
   void dispose() {
-    // Dispose only if we created it.
     if (widget.controller == null) {
       _controller.dispose();
     }
     super.dispose();
   }
 
-  Future<void> _selectDate() async {
+  Future<void> _selectYearMonth() async {
     final DateTime now = DateTime.now();
     final DateTime initial = widget.initialDate ?? now;
-    final DateTime first = widget.firstDate ?? DateTime(1900);
-    final DateTime last = widget.lastDate ?? DateTime(2100);
+    final int firstYear = widget.firstDate?.year ?? 1900;
+    final int lastYear = widget.lastDate?.year ?? 2100;
 
-    final DateTime? pickedDate = await showDatePicker(
+    // Show year picker first
+    final int? selectedYear = await _showYearPicker(
       context: context,
-      initialDate: initial,
-      firstDate: first,
-      lastDate: last,
+      initialYear: initial.year,
+      firstYear: firstYear,
+      lastYear: lastYear,
     );
 
-    if (pickedDate != null) {
+    if (selectedYear != null) {
+      // Show month picker
+      final int? selectedMonth = await _showMonthPicker(
+        context: context,
+        initialMonth: initial.month,
+      );
 
-      final String formattedDate = "${pickedDate.year}-${DateFormat('MMMM').format(pickedDate)}";
-      setState(() {
-        _controller.text = formattedDate;
-      });
+      if (selectedMonth != null) {
+        final DateTime selectedDate = DateTime(selectedYear, selectedMonth);
+        final String formattedDate = "$selectedYear-${DateFormat('MMMM').format(selectedDate)}";
+
+        setState(() {
+          _controller.text = formattedDate;
+          _selectedDate = selectedDate;
+        });
+
+        // Call callback if provided
+        widget.onDateSelected?.call(selectedDate);
+      }
     }
   }
+
+  Future<int?> _showYearPicker({
+    required BuildContext context,
+    required int initialYear,
+    required int firstYear,
+    required int lastYear,
+  }) async {
+    return await showDialog<int>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(AppStrings.selectYear.tr),
+          content: SizedBox(
+            width: double.minPositive,
+            height: 300,
+            child: YearPicker(
+              firstDate: DateTime(firstYear),
+              lastDate: DateTime(lastYear),
+              selectedDate: DateTime(initialYear),
+              onChanged: (DateTime date) {
+                Navigator.of(context).pop(date.year);
+              },
+            ),
+          ),
+          actions: <Widget>[
+            OutlinedButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                AppStrings.cancel.tr,
+                style: context.txtTheme.headlineMedium?.copyWith(color: AppColors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<int?> _showMonthPicker({required BuildContext context, required int initialMonth}) async {
+    final List<String> months = <String>[
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+
+    return await showDialog<int>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(AppStrings.selectYear.tr),
+          content: SizedBox(
+            width: double.minPositive,
+            height: 400,
+            child: Column(
+              children: <Widget>[
+                const Divider(thickness: 2),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: months.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final bool isSelected = (index + 1) == initialMonth;
+                      return ListTile(
+                        title: Text(
+                          months[index],
+                          style: TextStyle(
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                            color: isSelected ? Theme.of(context).primaryColor : null,
+                          ),
+                        ),
+                        trailing: isSelected ? const Icon(Icons.check) : null,
+                        onTap: () {
+                          Navigator.of(context).pop(index + 1);
+                        },
+                      );
+                    },
+                  ),
+                ),
+                const Divider(thickness: 2),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            OutlinedButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                AppStrings.cancel.tr,
+                style: context.txtTheme.headlineMedium?.copyWith(color: AppColors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Get the selected date (useful for getting the DateTime object)
+  DateTime? get selectedDate => _selectedDate;
+
+  // Get formatted date string
+  String get formattedDate => _controller.text;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +210,7 @@ class _ReusableDatePickerFieldState extends State<ReusableDatePickerField> {
         borderRadius: BorderRadius.circular(AppSizes.md),
       ),
       child: GestureDetector(
-        onTap: _selectDate,
+        onTap: _selectYearMonth,
         child: AbsorbPointer(
           child: TextFormField(
             controller: _controller,

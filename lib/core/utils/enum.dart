@@ -1,13 +1,14 @@
+import 'package:pass_rate/core/config/app_strings.dart';
+
 enum ResultStatus {
-  passed('Passed'),
-  failed('Failed');
+  passed(AppStrings.pass),
+  failed(AppStrings.fail),
+  none('');
 
   const ResultStatus(this.displayName);
 
   final String displayName;
 
-  // Optional: Add other useful properties
-  bool get isSuccess => this == ResultStatus.passed;
 
   // Convert from string
   static ResultStatus? fromString(String value) {
