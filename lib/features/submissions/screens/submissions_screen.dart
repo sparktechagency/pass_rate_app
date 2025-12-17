@@ -8,6 +8,7 @@ import 'package:pass_rate/core/extensions/widget_extensions.dart';
 import 'package:pass_rate/shared/widgets/slide_animation.dart';
 import '../../../core/common/widgets/floating_support.dart';
 import '../../../core/design/app_colors.dart';
+import '../../../core/utils/device/device_utility.dart';
 import '../../../shared/widgets/custom_appbar.dart' show CustomAppBar;
 import '../../../shared/widgets/lottie_loader.dart';
 import '../controllers/submissions_controller.dart';
@@ -21,10 +22,13 @@ class SubmissionsScreen extends GetView<SubmissionsController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(label: AppStrings.mySubmission.tr),
+
       /// Lower Helping Button ============>
-/*      /// hiding donation part
+      /// hiding donation part for ios
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: const SupportFloatingWidget(),*/
+      floatingActionButton:
+          DeviceUtility.isAndroid() ? const SupportFloatingWidget() : const SizedBox.shrink(),
+
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppSizes.md),
         child: Column(
@@ -37,13 +41,14 @@ class SubmissionsScreen extends GetView<SubmissionsController> {
               decoration: InputDecoration(
                 hintText: AppStrings.search.tr,
                 prefixIcon: const Icon(CupertinoIcons.search, color: AppColors.primaryColor),
-                suffixIcon: Obx(() =>
-                controller.searchQuery.value.isNotEmpty
-                    ? IconButton(
-                  icon: const Icon(CupertinoIcons.clear, color: AppColors.primaryColor),
-                  onPressed: controller.clearSearch,
-                )
-                    : const SizedBox.shrink()
+                suffixIcon: Obx(
+                  () =>
+                      controller.searchQuery.value.isNotEmpty
+                          ? IconButton(
+                            icon: const Icon(CupertinoIcons.clear, color: AppColors.primaryColor),
+                            onPressed: controller.clearSearch,
+                          )
+                          : const SizedBox.shrink(),
                 ),
               ),
               onChanged: (String value) {
@@ -69,11 +74,12 @@ class SubmissionsScreen extends GetView<SubmissionsController> {
             /// Submission Container with search results ====>
             Expanded(
               child: Obx(
-                    () => Visibility(
+                () => Visibility(
                   replacement: const LottieLoaderWidget().centered,
                   visible: controller.loader.value == false,
                   child: Obx(() {
-                    final List<MySubmissionModel> filteredSubmissions = controller.filteredSubmissions;
+                    final List<MySubmissionModel> filteredSubmissions =
+                        controller.filteredSubmissions;
 
                     // Show "No results found" if searching and no results
                     if (controller.searchQuery.value.isNotEmpty && filteredSubmissions.isEmpty) {
@@ -84,13 +90,13 @@ class SubmissionsScreen extends GetView<SubmissionsController> {
                             Icon(
                               CupertinoIcons.search,
                               size: 64,
-                              color: AppColors.primaryColor.withValues(alpha:0.5),
+                              color: AppColors.primaryColor.withValues(alpha: 0.5),
                             ),
                             const SizedBox(height: AppSizes.md),
                             Text(
                               'No results found for "${controller.searchQuery.value}"',
                               style: context.txtTheme.bodyMedium?.copyWith(
-                                color: AppColors.primaryColor.withValues(alpha:0.7),
+                                color: AppColors.primaryColor.withValues(alpha: 0.7),
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -107,12 +113,13 @@ class SubmissionsScreen extends GetView<SubmissionsController> {
                         final MySubmissionModel submission = filteredSubmissions[index];
 
                         return SlideAnimation(
-                          delay: Duration(milliseconds: index * 100), // Reduced delay for better UX
+                          delay: Duration(milliseconds: index * 100),
+                          // Reduced delay for better UX
                           child: SubmissionTile(
-                              submittedAssessment: submission,
-                              onDelete: () {
-                                controller.handleDelete(submission: submission);
-                              }
+                            submittedAssessment: submission,
+                            onDelete: () {
+                              controller.handleDelete(submission: submission);
+                            },
                           ),
                         );
                       },
