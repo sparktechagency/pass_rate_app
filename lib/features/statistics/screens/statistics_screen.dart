@@ -32,9 +32,10 @@ class StatisticsScreen extends GetView<StatisticsController> {
     return Scaffold(
       appBar: CustomAppBar(label: AppStrings.statisticsOverview.tr),
 
-      /// Lower Helping Button ============>
+/*      /// Lower Helping Button ============>
+       /// hiding donation part
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: const SupportFloatingWidget(),
+      floatingActionButton: const SupportFloatingWidget(),*/
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: AppSizes.md),
