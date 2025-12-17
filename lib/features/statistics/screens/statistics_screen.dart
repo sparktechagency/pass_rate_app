@@ -16,6 +16,7 @@ import '../../../core/common/widgets/custom_dropdown.dart';
 import '../../../core/common/widgets/date_picker_field.dart';
 import '../../../core/common/widgets/floating_support.dart';
 import '../../../core/design/app_colors.dart';
+import '../../../core/utils/device/device_utility.dart';
 import '../../../core/utils/logger_utils.dart';
 import '../../../shared/widgets/lottie_loader.dart';
 import '../controllers/statistics_controller.dart';
@@ -32,10 +33,11 @@ class StatisticsScreen extends GetView<StatisticsController> {
     return Scaffold(
       appBar: CustomAppBar(label: AppStrings.statisticsOverview.tr),
 
-/*      /// Lower Helping Button ============>
-       /// hiding donation part
+      /// Lower Helping Button ============>
+      /// hiding donation part for ios
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: const SupportFloatingWidget(),*/
+      floatingActionButton:
+          DeviceUtility.isAndroid() ? const SupportFloatingWidget() : const SizedBox.shrink(),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: AppSizes.md),

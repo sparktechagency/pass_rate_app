@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pass_rate/core/config/app_sizes.dart';
 import 'package:pass_rate/core/extensions/context_extensions.dart';
 import 'package:pass_rate/core/routes/app_routes.dart';
+import 'package:pass_rate/core/utils/device/device_utility.dart';
 import '../../../core/common/widgets/floating_support.dart';
 import '../../../core/design/app_colors.dart';
 import '../../../core/design/app_icons.dart';
@@ -19,9 +20,10 @@ class HomePage extends GetView<HomeController> {
     final HomeController _ = controller;
     return Scaffold(
       /// Lower Helping Button ============>
-/*      /// hiding donation part
+      /// hiding donation part for ios
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: const SupportFloatingWidget(),*/
+      floatingActionButton:
+          DeviceUtility.isAndroid() ? const SupportFloatingWidget() : const SizedBox.shrink(),
 
       body: SingleChildScrollView(
         child: Column(
