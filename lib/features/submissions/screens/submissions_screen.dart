@@ -22,8 +22,9 @@ class SubmissionsScreen extends GetView<SubmissionsController> {
     return Scaffold(
       appBar: CustomAppBar(label: AppStrings.mySubmission.tr),
       /// Lower Helping Button ============>
+/*      /// hiding donation part
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: const SupportFloatingWidget(),
+      floatingActionButton: const SupportFloatingWidget(),*/
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: AppSizes.md),
         child: Column(

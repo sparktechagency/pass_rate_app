@@ -19,8 +19,9 @@ class HomePage extends GetView<HomeController> {
     final HomeController _ = controller;
     return Scaffold(
       /// Lower Helping Button ============>
+/*      /// hiding donation part
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: const SupportFloatingWidget(),
+      floatingActionButton: const SupportFloatingWidget(),*/
 
       body: SingleChildScrollView(
         child: Column(

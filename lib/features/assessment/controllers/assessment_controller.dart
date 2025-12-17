@@ -315,7 +315,8 @@ class AssessmentController extends GetxController {
           final SubmissionResponse submissionResponse = SubmissionResponse.fromJson(
             response.jsonResponse?['data'] ?? <String, dynamic>{},
           );
-          await Get.toNamed(AppRoutes.supportPage);
+/*          /// hiding donation part
+          await Get.toNamed(AppRoutes.supportPage);*/
           Get.offNamed(AppRoutes.confirmSubmissionPage, arguments: submissionResponse);
         } else {
           ToastManager.show(
